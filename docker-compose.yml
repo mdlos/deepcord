@@ -1,0 +1,37 @@
+services:
+  mysql-server:
+    image: mysql:5.7
+    container_name: mysql-server
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: chat_system
+      MYSQL_USER: redes2
+      MYSQL_PASSWORD: r3d3s321
+      MYSQL_ROOT_HOST: '%'
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    restart: always
+    networks:
+      - backend
+
+  chat-server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: chat_server
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mysql-server
+    restart: always
+    networks:
+      - backend
+
+volumes:
+  mysql_data:
+
+networks:
+  backend:
+    driver: bridge

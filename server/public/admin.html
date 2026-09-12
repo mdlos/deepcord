@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Chat System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f0f0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+        
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .admin-header h1 {
+            font-size: 24px;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .admin-header .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 14px;
+            color: #888;
+        }
+        
+        .admin-header .user-info .badge {
+            background: #fbbf24;
+            color: #0f0f0f;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .admin-header .logout-btn {
+            padding: 8px 16px;
+            background: rgba(248,113,113,0.15);
+            color: #f87171;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+        
+        .admin-header .logout-btn:hover {
+            background: rgba(248,113,113,0.25);
+        }
+        
+        .admin-header .back-btn {
+            color: #888;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .admin-header .back-btn:hover {
+            background: rgba(255,255,255,0.05);
+            color: #e0e0e0;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .stat-card .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #fbbf24;
+        }
+        
+        .stat-card .label {
+            font-size: 13px;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 4px;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        .tabs button {
+            flex: 1;
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .tabs button.active {
+            background: rgba(251,191,36,0.15);
+            color: #fbbf24;
+        }
+        
+        .tabs button:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .admin-actions button {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            color: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .admin-actions button:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .admin-actions button.primary {
+            background: #fbbf24;
+            color: #0f0f0f;
+            border-color: #fbbf24;
+        }
+        
+        .admin-actions button.primary:hover {
+            background: #f59e0b;
+        }
+        
+        .admin-actions button.danger {
+            color: #f87171;
+            border-color: rgba(248,113,113,0.2);
+        }
+        
+        .admin-actions button.danger:hover {
+            background: rgba(248,113,113,0.1);
+        }
+        
+        .table-container {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 12px;
+            overflow: hidden;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        
+        thead {
+            background: rgba(255,255,255,0.03);
+        }
+        
+        th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 13px;
+            color: #888;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            font-size: 14px;
+        }
+        
+        tr:hover {
+            background: rgba(255,255,255,0.02);
+        }
+        
+        .status-badge {
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+        
+        .status-badge.online {
+            background: rgba(74,222,128,0.15);
+            color: #4ade80;
+        }
+        
+        .status-badge.offline {
+            background: rgba(248,113,113,0.1);
+            color: #f87171;
+        }
+        
+        .status-badge.admin {
+            background: rgba(251,191,36,0.15);
+            color: #fbbf24;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        
+        .action-buttons button {
+            padding: 4px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .action-buttons .edit-btn {
+            background: rgba(251,191,36,0.15);
+            color: #fbbf24;
+        }
+        
+        .action-buttons .edit-btn:hover {
+            background: rgba(251,191,36,0.25);
+        }
+        
+        .action-buttons .delete-btn {
+            background: rgba(248,113,113,0.15);
+            color: #f87171;
+        }
+        
+        .action-buttons .delete-btn:hover {
+            background: rgba(248,113,113,0.25);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+        }
+        
+        .modal.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #1a1a2e;
+            padding: 30px;
+            border-radius: 16px;
+            max-width: 450px;
+            width: 100%;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        .modal-content h2 {
+            margin-bottom: 10px;
+            font-size: 20px;
+            color: #e0e0e0;
+        }
+        
+        .modal-content p {
+            color: #888;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .modal-content input {
+            width: 100%;
+            padding: 10px 14px;
+            margin: 8px 0;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 14px;
+        }
+        
+        .modal-content input:focus {
+            outline: none;
+            border-color: #fbbf24;
+        }
+        
+        .modal-content .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        
+        .modal-content button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .modal-content .btn-primary {
+            background: #fbbf24;
+            color: #0f0f0f;
+        }
+        
+        .modal-content .btn-primary:hover {
+            background: #f59e0b;
+        }
+        
+        .modal-content .btn-danger {
+            background: #f87171;
+            color: white;
+        }
+        
+        .modal-content .btn-secondary {
+            background: rgba(255,255,255,0.05);
+            color: #888;
+        }
+        
+        .modal-content .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #555;
+        }
+        
+        .empty-state .icon {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            th, td {
+                padding: 8px 10px;
+                font-size: 13px;
+            }
+            
+            .tabs button {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .admin-container {
+                padding: 12px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            
+            .stat-card {
+                padding: 14px;
+            }
+            
+            .stat-card .number {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="admin-header">
+            <div>
+                <h1>👑 Painel Administrativo</h1>
+                <div style="font-size:13px;color:#666;margin-top:4px;">Gerenciamento do sistema</div>
+            </div>
+            <div class="user-info">
+                <span id="admin-user">admin</span>
+                <span class="badge">👑 Admin</span>
+                <button class="logout-btn" onclick="logout()">🚪 Sair</button>
+                <a href="/chat" class="back-btn">← Voltar ao Chat</a>
+            </div>
+        </div>
+        
+        <div class="stats-grid" id="stats-grid">
+            <div class="stat-card">
+                <div class="number" id="total-users">0</div>
+                <div class="label">Total de Usuários</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="online-users">0</div>
+                <div class="label">Usuários Online</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="total-rooms">0</div>
+                <div class="label">Salas de Chat</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="admin-count">0</div>
+                <div class="label">Administradores</div>
+            </div>
+        </div>
+        
+        <div class="tabs">
+            <button class="active" onclick="switchTab('users')">👥 Usuários</button>
+            <button onclick="switchTab('rooms')">🏠 Salas</button>
+        </div>
+        
+        <!-- Aba Usuários -->
+        <div class="tab-content active" id="tab-users">
+            <div class="admin-actions">
+                <button class="primary" onclick="refreshUsers()">🔄 Atualizar</button>
+                <button onclick="showCreateUser()">➕ Novo Usuário</button>
+                <button onclick="showResetPassword()">🔑 Solicitar Reset</button>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Status</th>
+                            <th>Função</th>
+                            <th>Email</th>
+                            <th>Criado em</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-table-body">
+                        <tr><td colspan="6" class="loading">Carregando usuários...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Aba Salas -->
+        <div class="tab-content" id="tab-rooms">
+            <div class="admin-actions">
+                <button class="primary" onclick="refreshRooms()">🔄 Atualizar</button>
+                <button onclick="showCreateRoom()">➕ Nova Sala</button>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Sala</th>
+                            <th>Criador</th>
+                            <th>Membros</th>
+                            <th>Mensagens</th>
+                            <th>Criado em</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rooms-table-body">
+                        <tr><td colspan="6" class="loading">Carregando salas...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal: Editar Usuário -->
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <h2>✏️ Editar Usuário</h2>
+            <p>Altere a senha do usuário</p>
+            <input type="hidden" id="edit-username">
+            <div>
+                <label style="display:block;color:#888;font-size:13px;margin-top:10px;">Nova Senha</label>
+                <input type="password" id="edit-password" placeholder="Digite a nova senha (mínimo 6 caracteres)">
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeModal('edit-modal')">Cancelar</button>
+                <button class="btn-primary" onclick="saveUser()">Salvar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal: Criar Usuário -->
+    <div class="modal" id="create-modal">
+        <div class="modal-content">
+            <h2>➕ Novo Usuário</h2>
+            <p>Crie um novo usuário no sistema</p>
+            <div>
+                <label style="display:block;color:#888;font-size:13px;margin-top:10px;">Usuário</label>
+                <input type="text" id="create-username" placeholder="Nome do usuário">
+            </div>
+            <div>
+                <label style="display:block;color:#888;font-size:13px;margin-top:10px;">Senha</label>
+                <input type="password" id="create-password" placeholder="Senha (mínimo 6 caracteres)">
+            </div>
+            <div>
+                <label style="display:block;color:#888;font-size:13px;margin-top:10px;">Email</label>
+                <input type="email" id="create-email" placeholder="Email do usuário">
+            </div>
+            <div style="margin-top:10px;">
+                <label style="color:#888;font-size:13px;display:flex;align-items:center;gap:8px;">
+                    <input type="checkbox" id="create-admin"> Administrador
+                </label>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeModal('create-modal')">Cancelar</button>
+                <button class="btn-primary" onclick="createUser()">Criar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal: Reset de Senha -->
+    <div class="modal" id="reset-modal">
+        <div class="modal-content">
+            <h2>🔑 Solicitar Reset de Senha</h2>
+            <p>Envia uma solicitação para o administrador alterar a senha</p>
+            <div>
+                <label style="display:block;color:#888;font-size:13px;margin-top:10px;">Usuário</label>
+                <input type="text" id="reset-username" placeholder="Nome do usuário">
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeModal('reset-modal')">Cancelar</button>
+                <button class="btn-primary" onclick="requestReset()">Solicitar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal: Criar Sala -->
+    <div class="modal" id="create-room-modal">
+        <div class="modal-content">
+            <h2>🏠 Nova Sala</h2>
+            <p>Crie uma nova sala de chat</p>
+            <div>
+                <label style="display:block;color:#888;font-size:13px;margin-top:10px;">Nome da Sala</label>
+                <input type="text" id="create-room-name" placeholder="Nome da sala">
+            </div>
+            <div style="margin-top:10px;">
+                <label style="color:#888;font-size:13px;display:flex;align-items:center;gap:8px;">
+                    <input type="checkbox" id="create-room-private"> Sala Privada (requer convite)
+                </label>
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeModal('create-room-modal')">Cancelar</button>
+                <button class="btn-primary" onclick="createRoom()">Criar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const username = new URLSearchParams(window.location.search).get('username') || 'admin';
+        const host = window.location.hostname;
+        const port = '8081';
+        const baseUrl = `http://${host}:${port}`;
+        let currentTab = 'users';
+        let rooms = [];
+        
+        document.getElementById('admin-user').textContent = username;
+        
+        // ============================================
+        // AUTENTICAÇÃO
+        // ============================================
+        
+        async function checkAuth() {
+            try {
+                const response = await fetch(`${baseUrl}/admin/api/verify`);
+                if (!response.ok) {
+                    window.location.href = '/admin/login';
+                    return;
+                }
+                const data = await response.json();
+                if (!data.authenticated) {
+                    window.location.href = '/admin/login';
+                }
+            } catch (error) {
+                window.location.href = '/admin/login';
+            }
+        }
+        checkAuth();
+        
+        // ============================================
+        // TABS
+        // ============================================
+        
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tabs button').forEach(b => b.classList.toggle('active', b.textContent.includes(tab === 'users' ? 'Usuários' : 'Salas')));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            
+            if (tab === 'users') {
+                loadUsers();
+            } else {
+                loadRooms();
+            }
+        }
+        
+        // ============================================
+        // LOGOUT
+        // ============================================
+        
+        async function logout() {
+            try {
+                await fetch(`${baseUrl}/admin/api/logout`, { method: 'POST' });
+            } catch (error) {}
+            window.location.href = '/admin/login';
+        }
+        
+        // ============================================
+        // USUÁRIOS
+        // ============================================
+        
+        async function loadUsers() {
+            const tbody = document.getElementById('users-table-body');
+            tbody.innerHTML = '<tr><td colspan="6" class="loading">Carregando usuários...</td></tr>';
+            
+            try {
+                const response = await fetch(`${baseUrl}/api/users`);
+                if (!response.ok) {
+                    if (response.status === 403 || response.status === 401) {
+                        window.location.href = '/admin/login';
+                        return;
+                    }
+                    throw new Error('Erro ao carregar');
+                }
+                const data = await response.json();
+                
+                if (data.success) {
+                    renderUsers(data.users);
+                    updateStats(data.users);
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="6" class="empty-state">❌ ${data.message || 'Erro ao carregar'}</td></tr>`;
+                }
+            } catch (error) {
+                tbody.innerHTML = `<tr><td colspan="6" class="empty-state">❌ Erro ao conectar ao servidor</td></tr>`;
+            }
+        }
+        
+        function renderUsers(users) {
+            const tbody = document.getElementById('users-table-body');
+            
+            if (!users || users.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="empty-state">📭 Nenhum usuário cadastrado</td></tr>`;
+                return;
+            }
+            
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td><strong>${user.username}</strong></td>
+                    <td>
+                        <span class="status-badge ${user.is_online ? 'online' : 'offline'}">
+                            ${user.is_online ? '🟢 Online' : '⚪ Offline'}
+                        </span>
+                    </td>
+                    <td>
+                        ${user.is_admin ? '<span class="status-badge admin">👑 Admin</span>' : '👤 Usuário'}
+                    </td>
+                    <td>${user.email || '-'}</td>
+                    <td>${user.created_at ? new Date(user.created_at).toLocaleDateString() : '-'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="edit-btn" onclick="editUser('${user.username}')">✏️</button>
+                            <button class="delete-btn" onclick="deleteUser('${user.username}')">🗑️</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function updateStats(users) {
+            const total = users ? users.length : 0;
+            const online = users ? users.filter(u => u.is_online).length : 0;
+            const admins = users ? users.filter(u => u.is_admin).length : 0;
+            
+            document.getElementById('total-users').textContent = total;
+            document.getElementById('online-users').textContent = online;
+            document.getElementById('admin-count').textContent = admins;
+            document.getElementById('total-rooms').textContent = rooms.length || 0;
+        }
+        
+        function refreshUsers() { loadUsers(); }
+        
+        // ============================================
+        // SALAS
+        // ============================================
+        
+        async function loadRooms() {
+            const tbody = document.getElementById('rooms-table-body');
+            tbody.innerHTML = '<tr><td colspan="6" class="loading">Carregando salas...</td></tr>';
+            
+            try {
+                const response = await fetch(`${baseUrl}/api/rooms`);
+                if (!response.ok) {
+                    if (response.status === 403 || response.status === 401) {
+                        window.location.href = '/admin/login';
+                        return;
+                    }
+                    throw new Error('Erro ao carregar');
+                }
+                const data = await response.json();
+                
+                if (data.success) {
+                    rooms = data.rooms || [];
+                    renderRooms(rooms);
+                    updateStats(null);
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="6" class="empty-state">❌ ${data.message || 'Erro ao carregar'}</td></tr>`;
+                }
+            } catch (error) {
+                tbody.innerHTML = `<tr><td colspan="6" class="empty-state">❌ Erro ao conectar ao servidor</td></tr>`;
+            }
+        }
+        
+        function renderRooms(rooms) {
+            const tbody = document.getElementById('rooms-table-body');
+            
+            if (!rooms || rooms.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="empty-state">🏠 Nenhuma sala criada</td></tr>`;
+                return;
+            }
+            
+            tbody.innerHTML = rooms.map(room => `
+                <tr>
+                    <td><strong>#${room.name}</strong></td>
+                    <td>${room.owner || 'admin'}</td>
+                    <td>${room.member_count || 0} membros</td>
+                    <td>${room.message_count || 0} mensagens</td>
+                    <td>${room.created_at ? new Date(room.created_at).toLocaleDateString() : '-'}</td>
+                    <td>
+                        <div class="action-buttons">
+                            ${room.name !== 'geral' ? `
+                                <button class="delete-btn" onclick="deleteRoom('${room.name}')">🗑️ Apagar</button>
+                            ` : `
+                                <span style="color:#666;font-size:12px;">📌 Geral</span>
+                            `}
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function refreshRooms() { loadRooms(); }
+        
+        // ============================================
+        // FUNÇÕES USUÁRIOS
+        // ============================================
+        
+        function editUser(username) {
+            document.getElementById('edit-username').value = username;
+            document.getElementById('edit-password').value = '';
+            document.getElementById('edit-modal').classList.add('show');
+        }
+        
+        async function saveUser() {
+            const username = document.getElementById('edit-username').value;
+            const password = document.getElementById('edit-password').value;
+            
+            if (!password || password.length < 6) {
+                alert('A senha deve ter pelo menos 6 caracteres');
+                return;
+            }
+            
+            if (!confirm(`Deseja realmente alterar a senha de "${username}"?`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${baseUrl}/api/admin/password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `username=${encodeURIComponent(username)}&new_password=${encodeURIComponent(password)}`
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('✅ Senha alterada com sucesso!');
+                    closeModal('edit-modal');
+                    loadUsers();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                alert('❌ Erro ao salvar');
+            }
+        }
+        
+        function showCreateUser() {
+            document.getElementById('create-username').value = '';
+            document.getElementById('create-password').value = '';
+            document.getElementById('create-email').value = '';
+            document.getElementById('create-admin').checked = false;
+            document.getElementById('create-modal').classList.add('show');
+        }
+        
+        async function createUser() {
+            const username = document.getElementById('create-username').value.trim();
+            const password = document.getElementById('create-password').value;
+            const email = document.getElementById('create-email').value.trim();
+            const isAdmin = document.getElementById('create-admin').checked;
+            
+            if (!username || username.length < 3) {
+                alert('Usuário mínimo 3 caracteres');
+                return;
+            }
+            if (!password || password.length < 6) {
+                alert('Senha mínimo 6 caracteres');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${baseUrl}/api/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&email=${encodeURIComponent(email)}&is_admin=${isAdmin}`
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`✅ Usuário "${username}" criado com sucesso!`);
+                    closeModal('create-modal');
+                    loadUsers();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                alert('❌ Erro ao criar usuário');
+            }
+        }
+        
+        function deleteUser(username) {
+            if (username === 'admin') {
+                alert('⚠️ Não é possível apagar o usuário admin principal');
+                return;
+            }
+            if (username === document.getElementById('admin-user').textContent) {
+                alert('⚠️ Você não pode apagar seu próprio usuário');
+                return;
+            }
+            
+            if (!confirm(`⚠️ Deseja realmente apagar o usuário "${username}"?`)) {
+                return;
+            }
+            
+            deleteUserRequest(username);
+        }
+        
+        async function deleteUserRequest(username) {
+            try {
+                const response = await fetch(`${baseUrl}/api/admin/delete`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `username=${encodeURIComponent(username)}`
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`✅ Usuário "${username}" removido com sucesso!`);
+                    loadUsers();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                alert('❌ Erro ao apagar usuário');
+            }
+        }
+        
+        function showResetPassword() {
+            document.getElementById('reset-username').value = '';
+            document.getElementById('reset-modal').classList.add('show');
+        }
+        
+        async function requestReset() {
+            const username = document.getElementById('reset-username').value.trim();
+            
+            if (!username) {
+                alert('Digite o nome do usuário');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${baseUrl}/api/reset-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `username=${encodeURIComponent(username)}`
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('✅ Solicitação enviada para o administrador!');
+                    closeModal('reset-modal');
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                alert('❌ Erro ao solicitar reset');
+            }
+        }
+        
+        // ============================================
+        // FUNÇÕES SALAS
+        // ============================================
+        
+        function showCreateRoom() {
+            document.getElementById('create-room-name').value = '';
+            document.getElementById('create-room-private').checked = false;
+            document.getElementById('create-room-modal').classList.add('show');
+        }
+        
+        async function createRoom() {
+            const name = document.getElementById('create-room-name').value.trim();
+            const isPrivate = document.getElementById('create-room-private').checked;
+            
+            if (!name) {
+                alert('Digite o nome da sala');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${baseUrl}/api/admin/rooms`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `action=create&name=${encodeURIComponent(name)}&private=${isPrivate}`
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`✅ Sala "${name}" criada com sucesso!`);
+                    closeModal('create-room-modal');
+                    loadRooms();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                alert('❌ Erro ao criar sala');
+            }
+        }
+        
+        function deleteRoom(roomName) {
+            if (roomName === 'geral') {
+                alert('⚠️ Não é possível apagar a sala geral');
+                return;
+            }
+            
+            if (!confirm(`⚠️ Deseja realmente apagar a sala "${roomName}"?`)) {
+                return;
+            }
+            
+            deleteRoomRequest(roomName);
+        }
+        
+        async function deleteRoomRequest(roomName) {
+            try {
+                const response = await fetch(`${baseUrl}/api/admin/rooms/delete`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: `name=${encodeURIComponent(roomName)}`
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert(`✅ Sala "${roomName}" removida com sucesso!`);
+                    loadRooms();
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                alert('❌ Erro ao apagar sala');
+            }
+        }
+        
+        // ============================================
+        // MODAL
+        // ============================================
+        
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('show');
+        }
+        
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                }
+            });
+        });
+        
+        // Enter para submit
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                if (document.getElementById('edit-modal').classList.contains('show')) {
+                    saveUser();
+                } else if (document.getElementById('create-modal').classList.contains('show')) {
+                    createUser();
+                } else if (document.getElementById('reset-modal').classList.contains('show')) {
+                    requestReset();
+                } else if (document.getElementById('create-room-modal').classList.contains('show')) {
+                    createRoom();
+                }
+            }
+        });
+        
+        // ============================================
+        // INICIAR
+        // ============================================
+        
+        loadUsers();
+        loadRooms();
+        
+        setInterval(() => {
+            if (currentTab === 'users') {
+                loadUsers();
+            } else {
+                loadRooms();
+            }
+        }, 30000);
+    </script>
+</body>
+</html>
