@@ -1,0 +1,121 @@
+{
+  "users": {
+    "admin": {
+      "password": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9",
+      "is_admin": true,
+      "email": "admin@chat.com",
+      "created_at": "2026-09-13T02:24:36.374983"
+    },
+    "demo": {
+      "password": "d3ad9315b7be5dd53b31a273b3b3aba5defe700808305aa16a3062b76658a791",
+      "is_admin": false,
+      "email": "demo@chat.com",
+      "created_at": "2026-09-13T02:24:36.374994"
+    },
+    "🤖 IA DeepCord": {
+      "password": "d2a843562907577bb703df9e9f8cce4028c51d1877796aefdbb6b375838290ba",
+      "is_admin": false,
+      "email": "ai@chat.com",
+      "created_at": "2026-09-13T02:24:36.374998"
+    },
+    "Lucas": {
+      "password": "ad1e10c7f2d809520c2191e442ed016ed7507debeaad03d061a97ec69dc2361e",
+      "is_admin": false,
+      "email": "lucas@gmail.com",
+      "created_at": "2026-09-21T16:08:34.544720"
+    },
+    "lucas": {
+      "password": "ad1e10c7f2d809520c2191e442ed016ed7507debeaad03d061a97ec69dc2361e",
+      "is_admin": false,
+      "email": "lucas@gmail.com",
+      "created_at": "2026-09-21T16:54:33.885357"
+    },
+    "🧠 Orquestrador": {
+      "password": "6b932f75108e914918edec9b9773ede7692d12a9f95f017ec88ff69490f536ca",
+      "is_admin": false,
+      "email": "orq@chat.com",
+      "created_at": "2026-10-12T15:11:17.970790"
+    }
+  },
+  "rooms": {
+    "geral": {
+      "owner": "admin",
+      "created_at": "2026-10-13T18:47:20.795963",
+      "password": null,
+      "is_private": false,
+      "members": [
+        "admin"
+      ]
+    },
+    "Engenharia": {
+      "owner": "admin",
+      "created_at": "2026-10-13T18:50:59.797011",
+      "password": null,
+      "is_private": false,
+      "members": [
+        "admin"
+      ]
+    }
+  },
+  "room_messages": {
+    "geral": [
+      {
+        "id": "b9de858e",
+        "type": "message",
+        "from": "admin",
+        "content": "oi",
+        "timestamp": "18:53:44",
+        "room": "geral"
+      }
+    ],
+    "Engenharia": []
+  },
+  "message_ids": {
+    "561fba1c": {
+      "username": "admin",
+      "room": "geral"
+    },
+    "070a8ec4": {
+      "username": "🤖 IA DeepCord",
+      "room": "geral"
+    },
+    "00c29fda": {
+      "username": "🤖 IA DeepCord",
+      "room": "geral"
+    },
+    "1440a19f": {
+      "username": "admin",
+      "room": "geral"
+    },
+    "c4af4ee4": {
+      "username": "🤖 IA DeepCord",
+      "room": "geral"
+    },
+    "0806dc80": {
+      "username": "admin",
+      "room": "geral"
+    },
+    "2aad0bae": {
+      "username": "🤖 IA DeepCord",
+      "room": "geral"
+    },
+    "e0693984": {
+      "username": "🤖 IA DeepCord",
+      "room": "geral"
+    },
+    "b9de858e": {
+      "username": "admin",
+      "room": "geral"
+    }
+  },
+  "file_messages": {},
+  "user_events": {
+    "admin": []
+  },
+  "user_disciplines": {
+    "admin": []
+  },
+  "display_names": {},
+  "profile_photos": {},
+  "private_messages": {}
+}

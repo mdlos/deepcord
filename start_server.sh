@@ -14,9 +14,9 @@ NC='\033[0m'
 # Configurações (mesmas do sistema anterior)
 PORT=${1:-8081}
 DB_HOST=${2:-172.18.0.2}
-DB_USER=${3:-redes2}
-DB_PASS=${4:-r3d3s321}
-DB_NAME=${5:-chat_system}
+DB_USER=${3:-usuario}
+DB_PASS=${4:-senha}
+DB_NAME=${5:-seubd}
 
 # Verificar Python
 echo -e "${YELLOW}Verificando Python...${NC}"

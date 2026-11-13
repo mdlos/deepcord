@@ -41,7 +41,7 @@ class ChatServer:
     """Servidor de chat HTTP + WebSocket"""
     
     def __init__(self, host="0.0.0.0", port=8081, db_host="172.18.0.2",
-                 db_user="redes2", db_password="r3d3s321", db_name="chat_system"):
+                 db_user="usuario", db_password="senha", db_name="bancodedados"):
         self.host = host
         self.port = port
         self.db_host = db_host

@@ -1,450 +1,1185 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - DeepCord</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: linear-gradient(135deg, #0f0f1a 0%, #1a1a2e 50%, #16213e 100%);
-            padding: 20px;
-        }
-        
-        .login-container {
-            width: 100%;
-            max-width: 440px;
-        }
-        
-        .login-box {
-            background: rgba(30, 30, 50, 0.85);
-            backdrop-filter: blur(20px);
-            padding: 40px 32px;
-            border-radius: 24px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 25px 60px rgba(0,0,0,0.5);
-        }
-        
-        .login-header {
-            text-align: center;
-            margin-bottom: 32px;
-        }
-        
-        .login-header .logo {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
-        
-        .login-header h1 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #e0e0e0;
-        }
-        
-        .login-header .subtitle {
-            font-size: 14px;
-            color: #888;
-            margin-top: 4px;
-        }
-        
-        .login-header .credits {
-            margin-top: 12px;
-            padding: 12px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 12px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        
-        .login-header .credits p {
-            font-size: 12px;
-            color: #666;
-            line-height: 1.6;
-        }
-        
-        .login-header .credits .highlight {
-            color: #4facfe;
-        }
-        
-        .login-header .credits .highlight2 {
-            color: #fbbf24;
-        }
-        
-        .form-group {
-            margin-bottom: 18px;
-        }
-        
-        .form-group label {
-            display: block;
-            font-size: 13px;
-            font-weight: 500;
-            color: #888;
-            margin-bottom: 6px;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 14px 16px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 2px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
-            color: #e0e0e0;
-            font-size: 15px;
-            transition: all 0.3s;
-        }
-        
-        .form-group input:focus {
-            outline: none;
-            border-color: #4facfe;
-            background: rgba(79, 172, 254, 0.08);
-            box-shadow: 0 0 0 4px rgba(79, 172, 254, 0.1);
-        }
-        
-        .form-group input::placeholder {
-            color: #555;
-        }
-        
-        .form-options {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .form-options label {
-            color: #888;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .form-options label input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #4facfe;
-            cursor: pointer;
-        }
-        
-        .form-options a {
-            color: #4facfe;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        
-        .form-options a:hover {
-            text-decoration: underline;
-        }
-        
-        .btn-login {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #4facfe, #00f2fe);
-            border: none;
-            border-radius: 12px;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .btn-login:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(79, 172, 254, 0.3);
-        }
-        
-        .btn-login:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .register-link {
-            text-align: center;
-            margin-top: 20px;
-            color: #666;
-            font-size: 14px;
-        }
-        
-        .register-link a {
-            color: #4facfe;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .register-link a:hover {
-            text-decoration: underline;
-        }
-        
-        .message {
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            font-size: 14px;
-            display: none;
-        }
-        
-        .message.show {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .message.error {
-            background: rgba(248, 113, 113, 0.12);
-            color: #f87171;
-            border: 1px solid rgba(248, 113, 113, 0.15);
-        }
-        
-        .message.success {
-            background: rgba(74, 222, 128, 0.12);
-            color: #4ade80;
-            border: 1px solid rgba(74, 222, 128, 0.15);
-        }
-        
-        .message.info {
-            background: rgba(79, 172, 254, 0.12);
-            color: #4facfe;
-            border: 1px solid rgba(79, 172, 254, 0.15);
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.1);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 0.8s linear infinite;
-            margin-right: 10px;
-            vertical-align: middle;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        
-        .server-info {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-size: 12px;
-            color: #555;
-            margin-top: 16px;
-            padding: 8px 16px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 20px;
-        }
-        
-        .server-info .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-        
-        .server-info .dot.online {
-            background: #4ade80;
-        }
-        
-        .server-info .dot.offline {
-            background: #f87171;
-        }
-        
-        @media (max-width: 480px) {
-            .login-box { padding: 28px 20px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeepCord - Início</title>
+<style>
+/* ============================================
+   VARIÁVEIS DE TEMA
+   ============================================ */
+:root {
+    --bg-primary: #f5f7fa;
+    --bg-card: #ffffff;
+    --bg-sidebar: #ffffff;
+    --bg-hover: #f0f2f5;
+    --text-primary: #1a1a2e;
+    --text-secondary: #6b7280;
+    --text-tertiary: #9ca3af;
+    --border-color: #e5e7eb;
+    --accent: #4facfe;
+    --accent-dark: #2b8be0;
+    --accent-light: rgba(79,172,254,0.1);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --sidebar-width: 240px;
+}
+body.dark-theme {
+    --bg-primary: #0f0f14;
+    --bg-card: #1a1a24;
+    --bg-sidebar: #14141c;
+    --bg-hover: #1f1f2a;
+    --text-primary: #e5e7eb;
+    --text-secondary: #9ca3af;
+    --text-tertiary: #6b7280;
+    --border-color: #2a2a38;
+    --accent-light: rgba(79,172,254,0.15);
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: background 0.3s, color 0.3s;
+    -webkit-font-smoothing: antialiased;
+}
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+a { color: inherit; text-decoration: none; }
+input { font-family: inherit; }
+
+/* ============================================
+   LAYOUT PRINCIPAL
+   ============================================ */
+.layout {
+    display: flex;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+}
+
+/* ============================================
+   SIDEBAR
+   ============================================ */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--bg-sidebar);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    transition: transform 0.3s ease, background 0.3s;
+    z-index: 1000;
+}
+.sidebar-brand {
+    padding: 20px 20px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    border-bottom: 1px solid var(--border-color);
+}
+.sidebar-brand .logo {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    color: white;
+    flex-shrink: 0;
+}
+.sidebar-brand .name {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+.sidebar-nav {
+    flex: 1;
+    padding: 12px 8px;
+    overflow-y: auto;
+}
+.nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 2px;
+    transition: background 0.15s, color 0.15s;
+    cursor: pointer;
+    position: relative;
+}
+.nav-item:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+.nav-item.active {
+    background: var(--accent-light);
+    color: var(--accent);
+    font-weight: 600;
+}
+.nav-item .icon {
+    font-size: 18px;
+    width: 22px;
+    text-align: center;
+    flex-shrink: 0;
+}
+.nav-item .label { flex: 1; }
+.nav-item .badge {
+    font-size: 11px;
+    padding: 1px 7px;
+    border-radius: 10px;
+    background: var(--accent);
+    color: white;
+    font-weight: 600;
+}
+.sidebar-footer {
+    padding: 12px 8px;
+    border-top: 1px solid var(--border-color);
+}
+
+/* ============================================
+   MAIN CONTENT
+   ============================================ */
+.main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+}
+
+/* Topbar */
+.topbar {
+    height: 64px;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 16px;
+    flex-shrink: 0;
+    transition: background 0.3s, border-color 0.3s;
+}
+.menu-btn {
+    display: none;
+    font-size: 22px;
+    color: var(--text-secondary);
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    transition: background 0.15s;
+}
+.menu-btn:hover { background: var(--bg-hover); }
+.search-box {
+    flex: 1;
+    max-width: 480px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: 22px;
+    padding: 9px 16px;
+    transition: border-color 0.2s, background 0.3s;
+}
+.search-box:focus-within { border-color: var(--accent); }
+.search-box input {
+    flex: 1;
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+.search-box input::placeholder { color: var(--text-tertiary); }
+.search-box .search-icon { color: var(--text-tertiary); font-size: 16px; }
+.topbar-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.topbar-icon-btn {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    font-size: 18px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+    position: relative;
+}
+.topbar-icon-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+.topbar-icon-btn .dot {
+    position: absolute;
+    top: 8px;
+    right: 9px;
+    width: 8px; height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    border: 2px solid var(--bg-card);
+}
+.topbar-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.15s;
+    flex-shrink: 0;
+}
+.topbar-avatar:hover { transform: scale(1.05); }
+
+/* ============================================
+   CONTENT
+   ============================================ */
+.content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    transition: background 0.3s;
+}
+.content-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* HERO */
+.hero {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 22px;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.3s;
+}
+.hero .hero-avatar {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: white;
+    flex-shrink: 0;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+}
+.hero .hero-text { flex: 1; min-width: 0; }
+.hero .hero-text h2 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+}
+.hero .hero-text p {
+    color: var(--text-secondary);
+    font-size: 14px;
+}
+.hero-side {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--bg-primary);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background 0.15s;
+    flex-shrink: 0;
+    max-width: 220px;
+}
+.hero-side:hover { background: var(--bg-hover); }
+.hero-side .hero-side-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+    flex: 1;
+}
+.hero-side .arrow { color: var(--text-tertiary); font-size: 16px; }
+
+/* STATS */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 28px;
+}
+.stat-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 18px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: transform 0.15s, background 0.3s;
+    cursor: pointer;
+}
+.stat-card:hover { transform: translateY(-2px); }
+.stat-card .stat-icon {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    background: var(--accent-light);
+    color: var(--accent);
+    flex-shrink: 0;
+}
+.stat-card .stat-info { min-width: 0; }
+.stat-card .stat-value {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+}
+.stat-card .stat-label {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+/* SECTIONS */
+.section { margin-bottom: 32px; }
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+.section-title {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+.section-link {
+    font-size: 14px;
+    color: var(--accent);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    transition: background 0.15s;
+}
+.section-link:hover { background: var(--accent-light); }
+
+/* GRUPOS */
+.groups-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+.group-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+.group-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+.group-card .cover {
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    position: relative;
+    overflow: hidden;
+}
+.group-card .cover.has-image {
+    background-size: cover;
+    background-position: center;
+}
+.group-card .cover-default-1 { background: linear-gradient(135deg, #e0e7ff, #c7d2fe); }
+.group-card .cover-default-2 { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+.group-card .cover-default-3 { background: linear-gradient(135deg, #d1fae5, #a7f3d0); }
+.group-card .cover-default-4 { background: linear-gradient(135deg, #fee2e2, #fecaca); }
+.group-card .group-body {
+    padding: 14px 16px 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.group-card .group-name {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.group-card .group-meta {
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 14px;
+}
+.group-card .group-btn {
+    margin-top: auto;
+    width: 100%;
+    padding: 9px;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    transition: all 0.15s;
+}
+.group-card .group-btn:hover {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+.group-card .lock-badge {
+    position: absolute;
+    top: 10px; right: 10px;
+    padding: 3px 8px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+/* TABELA */
+.meetings-table {
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    transition: background 0.3s;
+}
+.meetings-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.meetings-table th {
+    text-align: left;
+    padding: 14px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border-color);
+    background: var(--bg-primary);
+}
+.meetings-table td {
+    padding: 14px 16px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--border-color);
+}
+.meetings-table tr:last-child td { border-bottom: none; }
+.meetings-table tbody tr {
+    transition: background 0.15s;
+    cursor: pointer;
+}
+.meetings-table tbody tr:hover { background: var(--bg-hover); }
+
+/* EMPTY STATE */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-secondary);
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+.empty-state .icon { font-size: 48px; margin-bottom: 12px; opacity: 0.5; }
+.empty-state h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; color: var(--text-primary); }
+.empty-state p { font-size: 13px; }
+
+/* ============================================
+   BOTTOM NAV (MOBILE)
+   ============================================ */
+.bottom-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-color);
+    padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+    z-index: 900;
+    transition: background 0.3s;
+}
+.bottom-nav-items {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+.bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 6px 12px;
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 500;
+    border-radius: var(--radius-sm);
+    transition: color 0.15s;
+    cursor: pointer;
+    min-width: 60px;
+}
+.bottom-nav-item.active {
+    color: var(--accent);
+}
+.bottom-nav-item .icon { font-size: 20px; }
+
+/* SIDEBAR BACKDROP */
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+    backdrop-filter: blur(2px);
+}
+.sidebar-backdrop.show { display: block; }
+
+/* ============================================
+   RESPONSIVO — TABLET
+   ============================================ */
+@media (max-width: 1024px) {
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .groups-grid { grid-template-columns: repeat(2, 1fr); }
+    .hero { flex-wrap: wrap; }
+    .hero-side { display: none; }
+}
+@media (max-width: 900px) {
+    .sidebar {
+        position: fixed;
+        top: 0; left: 0;
+        height: 100%;
+        transform: translateX(-100%);
+        box-shadow: 2px 0 20px rgba(0,0,0,0.15);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .menu-btn { display: flex; }
+    .content { padding: 20px; }
+}
+
+/* ============================================
+   RESPONSIVO — MOBILE
+   ============================================ */
+@media (max-width: 640px) {
+    .topbar {
+        padding: 0 14px;
+        height: 60px;
+        gap: 10px;
+    }
+    .search-box {
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+    .search-box input { font-size: 13px; }
+    .topbar-icon-btn { width: 36px; height: 36px; font-size: 16px; }
+    .topbar-avatar { width: 34px; height: 34px; font-size: 13px; }
+    
+    .content {
+        padding: 14px 14px 90px;
+    }
+    .hero {
+        padding: 16px;
+        gap: 12px;
+        flex-wrap: nowrap;
+    }
+    .hero .hero-avatar {
+        width: 50px; height: 50px;
+        font-size: 20px;
+    }
+    .hero .hero-text h2 { font-size: 17px; }
+    .hero .hero-text p { font-size: 12px; }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .stat-card {
+        padding: 14px 12px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .stat-card .stat-icon {
+        width: 36px; height: 36px;
+        font-size: 16px;
+        border-radius: 10px;
+    }
+    .stat-card .stat-value { font-size: 20px; }
+    .stat-card .stat-label { font-size: 11px; }
+    
+    .groups-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    .group-card .cover { height: 90px; }
+    
+    .section-title { font-size: 16px; }
+    .section-link { font-size: 13px; }
+    
+    .meetings-table th,
+    .meetings-table td {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+    .meetings-table th:nth-child(3),
+    .meetings-table td:nth-child(3) {
+        display: none;
+    }
+    
+    .bottom-nav { display: block; }
+}
+
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+.content::-webkit-scrollbar,
+.sidebar-nav::-webkit-scrollbar {
+    width: 6px;
+}
+.content::-webkit-scrollbar-track,
+.sidebar-nav::-webkit-scrollbar-track {
+    background: transparent;
+}
+.content::-webkit-scrollbar-thumb,
+.sidebar-nav::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+.content::-webkit-scrollbar-thumb:hover,
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* ============================================
+   ANIMAÇÕES
+   ============================================ */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.hero, .stat-card, .group-card, .meetings-table {
+    animation: fadeInUp 0.3s ease backwards;
+}
+.stat-card:nth-child(1) { animation-delay: 0.05s; }
+.stat-card:nth-child(2) { animation-delay: 0.1s; }
+.stat-card:nth-child(3) { animation-delay: 0.15s; }
+.stat-card:nth-child(4) { animation-delay: 0.2s; }
+</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-box">
-            <div class="login-header">
-                <div class="logo">💬</div>
-                <h1>DeepCord</h1>
-                <div class="subtitle">Comunicação em tempo real</div>
-                <div class="credits">
-                    <p>
-                        Sistema desenvolvido para disciplina <span class="highlight">Engenharia de Software</span>
-                    </p>
-                </div>
+<div class="layout">
+    <!-- Backdrop mobile -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop" onclick="toggleSidebar()"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="logo">💬</div>
+            <div class="name">DeepCord</div>
+        </div>
+        <nav class="sidebar-nav">
+            <a class="nav-item active" href="#" onclick="navigate('home')">
+                <span class="icon">🏠</span>
+                <span class="label">Início</span>
+            </a>
+            <a class="nav-item" href="#" onclick="navigate('groups')">
+                <span class="icon">👥</span>
+                <span class="label">Grupos de Estudo</span>
+            </a>
+            <a class="nav-item" href="#" onclick="navigate('calendar')">
+                <span class="icon">📅</span>
+                <span class="label">Calendário</span>
+            </a>
+            <a class="nav-item" href="#" onclick="navigate('materials')">
+                <span class="icon">📁</span>
+                <span class="label">Materiais</span>
+            </a>
+            <a class="nav-item" href="#" onclick="navigate('chat')">
+                <span class="icon">💬</span>
+                <span class="label">Chat</span>
+            </a>
+            <a class="nav-item" href="#" onclick="navigate('ai')">
+                <span class="icon">🤖</span>
+                <span class="label">Assistente IA</span>
+            </a>
+            <a class="nav-item" href="#" onclick="navigate('profile')">
+                <span class="icon">👤</span>
+                <span class="label">Perfil</span>
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <a class="nav-item" href="#" onclick="navigate('settings')">
+                <span class="icon">⚙️</span>
+                <span class="label">Configurações</span>
+            </a>
+            <a class="nav-item" href="#" onclick="logout()">
+                <span class="icon">🚪</span>
+                <span class="label">Sair</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+        <!-- TOPBAR -->
+        <div class="topbar">
+            <button class="menu-btn" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="search-input" placeholder="Buscar grupos, disciplinas ou membros...">
             </div>
-            
-            <div id="message" class="message"></div>
-            
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="username">Usuário</label>
-                    <input type="text" id="username" placeholder="Digite seu usuário" required autofocus>
-                </div>
-                <div class="form-group">
-                    <label for="password">Senha</label>
-                    <input type="password" id="password" placeholder="Digite sua senha" required>
-                </div>
-                <div class="form-options">
-                    <label>
-                        <input type="checkbox" id="remember"> Lembrar-me
-                    </label>
-                    <a href="#" id="forgot-link">Esqueceu a senha?</a>
-                </div>
-                <button type="submit" class="btn-login" id="login-btn">Entrar</button>
-            </form>
-            
-            <div class="register-link">
-                Não tem conta? <a href="#" id="register-link">Registre-se</a>
+            <div class="topbar-right">
+                <button class="topbar-icon-btn" onclick="toggleTheme()" title="Alternar tema" id="theme-btn">
+                    🌙
+                </button>
+                <button class="topbar-icon-btn" title="Notificações">
+                    🔔
+                    <span class="dot" id="notif-dot" style="display:none;"></span>
+                </button>
+                <div class="topbar-avatar" id="topbar-avatar" onclick="navigate('profile')">U</div>
             </div>
-            
-            <div class="server-info">
-                <span class="dot online" id="server-dot"></span>
-                <span id="server-status">Conectado ao servidor</span>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <div class="content-inner">
+                <!-- HERO -->
+                <div class="hero">
+                    <div class="hero-avatar" id="hero-avatar">👤</div>
+                    <div class="hero-text">
+                        <h2 id="hero-greeting">Olá, Usuário!</h2>
+                        <p>Bem-vindo de volta ao DeepCord.</p>
+                    </div>
+                    <div class="hero-side" onclick="navigate('groups')">
+                        <div class="hero-side-text">
+                            Seus grupos de estudo mais ativos
+                        </div>
+                        <span class="arrow">›</span>
+                    </div>
+                </div>
+
+                <!-- STATS -->
+                <div class="stats-grid">
+                    <div class="stat-card" onclick="navigate('groups')">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-groups">0</div>
+                            <div class="stat-label">Grupos ativos</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" onclick="navigate('calendar')">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-meetings">0</div>
+                            <div class="stat-label">Encontros esta semana</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" onclick="navigate('materials')">
+                        <div class="stat-icon">📁</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-materials">0</div>
+                            <div class="stat-label">Materiais disponíveis</div>
+                        </div>
+                    </div>
+                    <div class="stat-card" onclick="navigate('members')">
+                        <div class="stat-icon">👤</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-members">0</div>
+                            <div class="stat-label">Membros no total</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GRUPOS -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title">Seus grupos de estudo</div>
+                        <button class="section-link" onclick="navigate('groups')">
+                            Ver todos <span>→</span>
+                        </button>
+                    </div>
+                    <div class="groups-grid" id="groups-grid">
+                        <div class="empty-state" style="grid-column: 1/-1;">
+                            <div class="icon">📚</div>
+                            <h3>Carregando grupos...</h3>
+                            <p>Aguarde um instante</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- PRÓXIMOS ENCONTROS -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-title">Próximos encontros</div>
+                        <button class="section-link" onclick="navigate('calendar')">
+                            Ver calendário <span>→</span>
+                        </button>
+                    </div>
+                    <div class="meetings-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Grupo</th>
+                                    <th>Disciplina</th>
+                                    <th>Horário</th>
+                                </tr>
+                            </thead>
+                            <tbody id="meetings-body">
+                                <tr>
+                                    <td colspan="4" style="text-align:center; padding:24px; color: var(--text-secondary);">
+                                        Carregando...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        const serverHost = new URLSearchParams(window.location.search).get('host') || window.location.hostname || 'localhost';
-        const serverPort = new URLSearchParams(window.location.search).get('port') || '8081';
-        const baseUrl = `http://${serverHost}:${serverPort}`;
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav">
+    <div class="bottom-nav-items">
+        <div class="bottom-nav-item active" onclick="navigate('home')">
+            <span class="icon">🏠</span>
+            <span>Início</span>
+        </div>
+        <div class="bottom-nav-item" onclick="navigate('groups')">
+            <span class="icon">👥</span>
+            <span>Grupos</span>
+        </div>
+        <div class="bottom-nav-item" onclick="navigate('calendar')">
+            <span class="icon">📅</span>
+            <span>Calendário</span>
+        </div>
+        <div class="bottom-nav-item" onclick="navigate('chat')">
+            <span class="icon">💬</span>
+            <span>Chat</span>
+        </div>
+        <div class="bottom-nav-item" onclick="navigate('settings')">
+            <span class="icon">⚙️</span>
+            <span>Mais</span>
+        </div>
+    </div>
+</nav>
 
-        function showMessage(text, type) {
-            const msg = document.getElementById('message');
-            msg.textContent = text;
-            msg.className = `message show ${type}`;
-            setTimeout(() => { msg.classList.remove('show'); }, 5000);
+<script>
+// ============================================
+// CONFIG E ESTADO
+// ============================================
+const urlParams = new URLSearchParams(window.location.search);
+const username = urlParams.get('username') || localStorage.getItem('last_username') || '';
+const host = window.location.hostname;
+const port = '8081';
+const baseUrl = `http://${host}:${port}`;
+
+if (!username || username === '') {
+    window.location.href = '/login';
+    throw new Error('Não autenticado');
+}
+localStorage.setItem('last_username', username);
+
+// ============================================
+// TEMA
+// ============================================
+let currentTheme = localStorage.getItem('chat_theme') || 'light';
+applyTheme(currentTheme);
+
+function applyTheme(theme) {
+    currentTheme = theme;
+    if (theme === 'dark') {
+        document.body.classList.add('dark-theme');
+        document.getElementById('theme-btn').textContent = '☀️';
+    } else {
+        document.body.classList.remove('dark-theme');
+        document.getElementById('theme-btn').textContent = '🌙';
+    }
+    localStorage.setItem('chat_theme', theme);
+}
+
+function toggleTheme() {
+    applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
+}
+
+// ============================================
+// PERFIL
+// ============================================
+const displayName = localStorage.getItem('profile_display_name') || username;
+const profilePhoto = localStorage.getItem('profile_photo') || '';
+
+document.getElementById('hero-greeting').textContent = `Olá, ${displayName}!`;
+
+const heroAvatar = document.getElementById('hero-avatar');
+const topbarAvatar = document.getElementById('topbar-avatar');
+
+if (profilePhoto) {
+    heroAvatar.innerHTML = '';
+    heroAvatar.style.backgroundImage = `url(${profilePhoto})`;
+    topbarAvatar.textContent = '';
+    topbarAvatar.style.backgroundImage = `url(${profilePhoto})`;
+} else {
+    heroAvatar.textContent = displayName.charAt(0).toUpperCase();
+    topbarAvatar.textContent = displayName.charAt(0).toUpperCase();
+}
+
+// ============================================
+// NAVEGAÇÃO
+// ============================================
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebar-backdrop').classList.toggle('show');
+}
+
+function navigate(target) {
+    // Fecha sidebar em mobile
+    if (window.innerWidth <= 900) {
+        toggleSidebar();
+    }
+    
+    switch (target) {
+        case 'home':
+            // Já está aqui
+            break;
+        case 'groups':
+            window.location.href = `/chat?view=groups&username=${encodeURIComponent(username)}`;
+            break;
+        case 'calendar':
+            window.location.href = `/chat?view=calendar&username=${encodeURIComponent(username)}`;
+            break;
+        case 'materials':
+            window.location.href = `/chat?view=materials&username=${encodeURIComponent(username)}`;
+            break;
+        case 'chat':
+            window.location.href = `/chat?view=chat&username=${encodeURIComponent(username)}`;
+            break;
+        case 'ai':
+            window.location.href = `/chat?view=ai&username=${encodeURIComponent(username)}`;
+            break;
+        case 'profile':
+            window.location.href = `/chat?view=profile&username=${encodeURIComponent(username)}`;
+            break;
+        case 'settings':
+            window.location.href = `/chat?view=settings&username=${encodeURIComponent(username)}`;
+            break;
+        case 'members':
+            window.location.href = `/chat?view=members&username=${encodeURIComponent(username)}`;
+            break;
+    }
+}
+
+function logout() {
+    localStorage.removeItem('last_username');
+    window.location.href = '/login';
+}
+
+// ============================================
+// BUSCA
+// ============================================
+document.getElementById('search-input').addEventListener('input', function(e) {
+    const q = e.target.value.toLowerCase().trim();
+    document.querySelectorAll('.group-card').forEach(card => {
+        const name = card.querySelector('.group-name')?.textContent.toLowerCase() || '';
+        card.style.display = name.includes(q) ? '' : 'none';
+    });
+});
+
+// ============================================
+// CARREGAR DADOS
+// ============================================
+async function loadData() {
+    try {
+        const response = await fetch(`${baseUrl}/api/rooms/public`);
+        const data = await response.json();
+        
+        let userGroups = [];
+        if (data.success && Array.isArray(data.rooms)) {
+            userGroups = data.rooms.filter(r => 
+                !r.members || r.members.includes(username) || r.owner === username
+            );
         }
+        
+        renderGroups(userGroups);
+        updateStats(userGroups);
+        renderMeetings(userGroups);
+    } catch (err) {
+        console.error('Erro ao carregar dados:', err);
+        // Fallback com dados de exemplo
+        const mock = getMockGroups();
+        renderGroups(mock);
+        updateStats(mock);
+        renderMeetings(mock);
+    }
+}
 
-        // Verificar status do servidor
-        async function checkServer() {
-            try {
-                const response = await fetch(`${baseUrl}/api/status`);
-                if (response.ok) {
-                    document.getElementById('server-dot').className = 'dot online';
-                    document.getElementById('server-status').textContent = '🟢 Conectado ao servidor';
-                } else {
-                    document.getElementById('server-dot').className = 'dot offline';
-                    document.getElementById('server-status').textContent = '🔴 Servidor offline';
-                }
-            } catch {
-                document.getElementById('server-dot').className = 'dot offline';
-                document.getElementById('server-status').textContent = '🔴 Servidor offline';
-            }
+function getMockGroups() {
+    return [
+        { name: 'Programação I', member_count: 8, members: [username], is_private: false },
+        { name: 'Cálculo Diferencial e Integral', member_count: 12, members: [username], is_private: false },
+        { name: 'Banco de Dados I', member_count: 10, members: [username], is_private: false }
+    ];
+}
+
+function renderGroups(groups) {
+    const grid = document.getElementById('groups-grid');
+    
+    if (!groups || groups.length === 0) {
+        grid.innerHTML = `
+            <div class="empty-state" style="grid-column: 1/-1;">
+                <div class="icon">📚</div>
+                <h3>Nenhum grupo encontrado</h3>
+                <p>Vá em "Grupos de Estudo" para criar um novo</p>
+            </div>
+        `;
+        return;
+    }
+    
+    grid.innerHTML = groups.slice(0, 6).map((g, i) => {
+        const coverNum = (i % 4) + 1;
+        const isPrivate = g.is_private;
+        const memberCount = g.member_count || (g.members ? g.members.length : 0);
+        
+        return `
+            <div class="group-card" onclick="openGroup('${escapeAttr(g.name)}')">
+                <div class="cover cover-default-${coverNum}">
+                    📚
+                    ${isPrivate ? '<span class="lock-badge">🔒</span>' : ''}
+                </div>
+                <div class="group-body">
+                    <div class="group-name">${escapeHtml(g.name)}</div>
+                    <div class="group-meta">
+                        <span>👥</span>
+                        <span>${memberCount} membro${memberCount !== 1 ? 's' : ''}</span>
+                    </div>
+                    <button class="group-btn">Entrar no grupo</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function updateStats(groups) {
+    document.getElementById('stat-groups').textContent = groups.length;
+    document.getElementById('stat-meetings').textContent = Math.min(groups.length * 2, 8);
+    document.getElementById('stat-materials').textContent = groups.length * 3;
+    const totalMembers = groups.reduce((s, g) => s + (g.member_count || 0), 0);
+    document.getElementById('stat-members').textContent = totalMembers || groups.length;
+}
+
+function renderMeetings(groups) {
+    const body = document.getElementById('meetings-body');
+    
+    if (!groups || groups.length === 0) {
+        body.innerHTML = `
+            <tr>
+                <td colspan="4" style="text-align:center; padding:24px; color: var(--text-secondary);">
+                    Nenhum encontro agendado
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    const today = new Date();
+    const rows = groups.slice(0, 3).map((g, i) => {
+        const d = new Date(today);
+        d.setDate(d.getDate() + i + 1);
+        const dateStr = d.toLocaleDateString('pt-BR');
+        const timeStr = ['14:00', '16:00', '09:00'][i % 3];
+        const discipline = g.name.split(' ')[0];
+        return `
+            <tr onclick="openGroup('${escapeAttr(g.name)}')">
+                <td>${dateStr}</td>
+                <td>${escapeHtml(g.name)}</td>
+                <td>${escapeHtml(discipline)}</td>
+                <td>${timeStr}</td>
+            </tr>
+        `;
+    }).join('');
+    body.innerHTML = rows;
+}
+
+function openGroup(name) {
+    window.location.href = `/chat?view=chat&room=${encodeURIComponent(name)}&username=${encodeURIComponent(username)}`;
+}
+
+// ============================================
+// UTILITÁRIOS
+// ============================================
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = String(text);
+    return div.innerHTML;
+}
+function escapeAttr(text) {
+    return String(text).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+}
+
+// ============================================
+// RESIZE HANDLER
+// ============================================
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        // Fecha sidebar se passar para desktop
+        if (window.innerWidth > 900) {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebar-backdrop').classList.remove('show');
         }
-        checkServer();
-        setInterval(checkServer, 10000);
+    }, 200);
+});
 
-        // Login
-        document.getElementById('login-form').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
-            const remember = document.getElementById('remember').checked;
+// ============================================
+// INICIAR
+// ============================================
+loadData();
 
-            if (!username || !password) {
-                showMessage('Preencha todos os campos', 'error');
-                return;
-            }
-
-            const btn = document.getElementById('login-btn');
-            btn.innerHTML = '<span class="loading-spinner"></span> Entrando...';
-            btn.disabled = true;
-
-            try {
-                const response = await fetch(`${baseUrl}/api/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
-                });
-                const data = await response.json();
-
-                if (data.success) {
-                    showMessage('Login realizado!', 'success');
-                    setTimeout(() => {
-                        window.location.href = `/chat?username=${encodeURIComponent(username)}&host=${serverHost}&port=${serverPort}`;
-                    }, 500);
-                } else {
-                    showMessage(data.message || 'Credenciais inválidas', 'error');
-                }
-            } catch (error) {
-                showMessage('Erro ao conectar ao servidor', 'error');
-            }
-
-            btn.innerHTML = 'Entrar';
-            btn.disabled = false;
-        });
-
-        document.getElementById('register-link').addEventListener('click', function(e) {
-            e.preventDefault();
-            window.location.href = `/login?register=true&host=${serverHost}&port=${serverPort}`;
-        });
-
-        // Se for registro
-        if (new URLSearchParams(window.location.search).get('register') === 'true') {
-            document.getElementById('login-form').innerHTML = `
-                <div class="form-group"><label>Usuário</label><input type="text" id="reg-username" placeholder="Escolha um usuário" required></div>
-                <div class="form-group"><label>Email</label><input type="email" id="reg-email" placeholder="Digite seu email"></div>
-                <div class="form-group"><label>Senha</label><input type="password" id="reg-password" placeholder="Crie uma senha" required></div>
-                <button type="submit" class="btn-login" id="register-btn">Registrar</button>
-            `;
-            document.querySelector('.register-link').innerHTML = 'Já tem conta? <a href="#" id="login-link">Faça login</a>';
-
-            document.getElementById('register-btn').addEventListener('click', async function(e) {
-                e.preventDefault();
-                const username = document.getElementById('reg-username').value.trim();
-                const email = document.getElementById('reg-email').value.trim();
-                const password = document.getElementById('reg-password').value;
-
-                if (!username || !password) {
-                    showMessage('Preencha todos os campos obrigatórios', 'error');
-                    return;
-                }
-
-                if (username.length < 3) {
-                    showMessage('Usuário mínimo 3 caracteres', 'error');
-                    return;
-                }
-
-                if (password.length < 6) {
-                    showMessage('Senha mínimo 6 caracteres', 'error');
-                    return;
-                }
-
-                try {
-                    const response = await fetch(`${baseUrl}/api/register`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}&email=${encodeURIComponent(email)}`
-                    });
-                    const data = await response.json();
-
-                    if (data.success) {
-                        showMessage('Registro realizado! Faça login.', 'success');
-                        setTimeout(() => {
-                            document.getElementById('login-link').click();
-                        }, 1000);
-                    } else {
-                        showMessage(data.message || 'Erro no registro', 'error');
-                    }
-                } catch (error) {
-                    showMessage('Erro ao conectar ao servidor', 'error');
-                }
-            });
-
-            document.getElementById('login-link').addEventListener('click', function(e) {
-                e.preventDefault();
-                window.location.href = `/login?host=${serverHost}&port=${serverPort}`;
-            });
-        }
-    </script>
+// Polling para atualizar dados a cada 30s
+setInterval(loadData, 30000);
+</script>
 </body>
 </html>

@@ -23,7 +23,7 @@ class ChatServer:
         self.message_ids = {}
         self.ollama_host = "http://localhost:11434"
         self.ollama_model = "phi3"
-        self.ai_username = "🤖 Assistente IA"
+        self.ai_username = "🤖 IA DeepCord"
         self.ollama_available = False
         self.app = web.Application()
         self.setup_routes()
@@ -41,7 +41,7 @@ class ChatServer:
         self.app.router.add_get('/{path}', self.handle_static)
     
     async def check_ollama(self):
-        """Verifica se o Ollama está disponível"""
+        """Verifica se o IA DeepCord está disponível"""
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"{self.ollama_host}/api/tags", timeout=3) as resp:
@@ -51,17 +51,17 @@ class ChatServer:
                         if models:
                             self.ollama_model = models[0].get('name', self.ollama_model)
                             self.ollama_available = True
-                            logger.info(f"✅ Ollama disponível. Modelo: {self.ollama_model}")
+                            logger.info(f"✅ IA DeepCord disponível. Modelo: {self.ollama_model}")
                         else:
-                            logger.warning("⚠️ Ollama disponível, mas nenhum modelo encontrado")
+                            logger.warning("⚠️ IA DeepCord disponível, mas nenhum modelo encontrado")
                     else:
-                        logger.warning("⚠️ Ollama não está respondendo")
+                        logger.warning("⚠️ IA DeepCord não está respondendo")
         except Exception as e:
-            logger.warning(f"⚠️ Ollama não disponível: {e}")
+            logger.warning(f"⚠️ IA DeepCord não disponível: {e}")
             self.ollama_available = False
     
     async def handle_ollama_models(self, request):
-        """Retorna a lista de modelos Ollama disponíveis"""
+        """Retorna a lista de modelos IA DeepCord disponíveis"""
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(f"{self.ollama_host}/api/tags") as resp:
@@ -77,7 +77,7 @@ class ChatServer:
         
         return web.json_response({
             'success': False,
-            'message': 'Ollama não disponível'
+            'message': 'IA DeepCord não disponível'
         })
     
     async def handle_index(self, request):
@@ -130,7 +130,7 @@ class ChatServer:
         })
     
     async def call_ollama(self, prompt, system_prompt=""):
-        """Chama o Ollama para gerar uma resposta"""
+        """Chama o IA DeepCord para gerar uma resposta"""
         if not self.ollama_available:
             return None
         
@@ -189,7 +189,7 @@ class ChatServer:
         if self.ollama_available:
             await ws.send_json({
                 'type': 'system',
-                'content': '🤖 Assistente IA disponível! Pergunte algo digitando "/ia" ou "@ia"'
+                'content': '🤖 IA DeepCord disponível! Pergunte algo digitando "/ia" ou "@ia"'
             })
         
         await self.broadcast({
@@ -253,7 +253,7 @@ class ChatServer:
             }, 'geral')
             
             # Chamar Ollama
-            system_prompt = """Você é um assistente útil e amigável chamado "Assistente IA". 
+            system_prompt = """Você é um assistente útil e amigável chamado "IA DeepCord". 
             Você responde perguntas de forma clara e concisa. 
             Se não souber algo, diga que não sabe, não invente informações.
             Mantenha respostas curtas (máximo 2 parágrafos) a menos que seja necessário mais detalhes.
@@ -285,7 +285,7 @@ class ChatServer:
             else:
                 await self.clients[username].send_json({
                     'type': 'system',
-                    'content': '❌ Assistente IA indisponível no momento. Verifique se o Ollama está rodando.'
+                    'content': '❌ IA DeepCord indisponível no momento. Verifique se o IA DeepCord está rodando.'
                 })
         else:
             # Mensagem normal
@@ -601,7 +601,7 @@ class ChatServer:
         }, room)
         
         # Chamar Ollama
-        system_prompt = """Você é um assistente útil e amigável chamado "Assistente IA" que ajuda no chat. 
+        system_prompt = """Você é um assistente útil e amigável chamado "IA DeepCord" que ajuda no chat. 
         Você responde perguntas de forma clara, concisa e amigável.
         Se não souber algo, diga que não sabe, não invente informações.
         Mantenha respostas curtas e diretas.
@@ -634,7 +634,7 @@ class ChatServer:
         else:
             await self.clients[username].send_json({
                 'type': 'system',
-                'content': '❌ Assistente IA indisponível. Verifique se o Ollama está rodando.'
+                'content': '❌ IA DeepCord indisponível. Verifique se o IA DeepCord está rodando.'
             })
     
     async def send_history(self, ws, username, room):
@@ -691,7 +691,7 @@ class ChatServer:
             self.clients.pop(username, None)
     
     async def run(self, host='0.0.0.0', port=8081):
-        # Verificar Ollama antes de iniciar
+        # Verificar IA DeepCord antes de iniciar
         await self.check_ollama()
         
         runner = web.AppRunner(self.app)
@@ -700,7 +700,7 @@ class ChatServer:
         await site.start()
         
         print("\n" + "="*60)
-        print("  CHAT COM INTEGRAÇÃO OLLAMA - ASSISTENTE IA")
+        print("  CHAT COM INTEGRAÇÃO IA DeepCord - IA DeepCord")
         print("="*60)
         print(f"📍 Local: http://localhost:{port}")
         print(f"🌐 Rede: http://10.0.39.24:{port}")

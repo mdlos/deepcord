@@ -24,7 +24,7 @@ class ChatServer:
         self.file_messages = {}  # msg_id -> file_path
         self.ollama_host = "http://localhost:11434"
         self.ollama_model = "phi3"
-        self.ai_username = "🤖 Assistente IA"
+        self.ai_username = "🤖 IA DeepCord"
         self.ollama_available = False
         self.app = web.Application()
         self.setup_routes()
@@ -195,7 +195,7 @@ class ChatServer:
         if self.ollama_available:
             await ws.send_json({
                 'type': 'system',
-                'content': '🤖 Assistente IA disponível! Use /ia ou @ia para perguntar'
+                'content': '🤖 IA DeepCord disponível! Use /ia ou @ia para perguntar'
             })
         
         await self.broadcast({
@@ -680,7 +680,7 @@ class ChatServer:
             'is_typing': True
         }, room)
         
-        system_prompt = """Você é um assistente útil e amigável chamado "Assistente IA". 
+        system_prompt = """Você é um assistente útil e amigável chamado "IA DeepCord". 
         Responda de forma clara, concisa e amigável.
         Se não souber algo, diga que não sabe.
         Mantenha respostas curtas (máximo 2 parágrafos)."""
@@ -712,7 +712,7 @@ class ChatServer:
         else:
             await self.clients[username].send_json({
                 'type': 'system',
-                'content': '❌ Assistente IA indisponível no momento. Verifique se o Ollama está rodando.'
+                'content': '❌ IA DeepCord indisponível no momento. Verifique se o Ollama está rodando.'
             })
             logger.warning(f"❌ Falha ao obter resposta da IA para {username}")
     

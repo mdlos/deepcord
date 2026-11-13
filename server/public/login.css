@@ -1,0 +1,141 @@
+/* ============================================
+   RESET E ESTRUTURA DO WHATSAPP
+   ============================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    background-color: #dbd8d4; /* Fundo bege */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #111b21;
+}
+
+/* Adicionar um padrão sutil de bolinhas no fundo */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(#d1d7db 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.3;
+    z-index: -1;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.login-box {
+    background: #ffffff;
+    padding: 40px 32px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e9edef;
+}
+
+.login-brand, .login-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.login-brand h1, .login-header h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #111b21;
+    margin-bottom: 4px;
+}
+
+.login-brand .subtitle, .login-header .subtitle {
+    font-size: 14px;
+    color: #667781;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #111b21;
+    margin-bottom: 6px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px 14px;
+    background: #f8f9fa;
+    border: 1px solid #e9edef;
+    border-radius: 4px;
+    color: #111b21;
+    font-size: 15px;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #00a884;
+    background: #ffffff;
+}
+
+/* ESTILO DO BOTÃO ENTRAR */
+.btn-primary, .btn-login {
+    display: inline-block;
+    width: 100%;
+    padding: 14px;
+    background-color: #00a884;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.btn-primary:hover, .btn-login:hover {
+    background-color: #008f6f;
+}
+
+/* ESTILO DOS LINKS */
+a {
+    color: #00a884 !important;
+    text-decoration: none !important;
+    font-weight: 500;
+}
+
+a:hover {
+    text-decoration: underline !important;
+}
+
+.login-footer, .back-link {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+    color: #667781;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 13px;
+}
+
+/* ESCONDE ELEMENTOS ANTIGOS */
+.theme-toggle, #theme-btn, .server-status, .input-icon, .badge, .security-info {
+    display: none !important;
+}
+
+/* Força a cor de fundo exata em todo o corpo da página */
+body {
+    background-color: #dbd8d4 !important;
+}

@@ -1,13 +1,72 @@
-/* Estilos globais */
-* { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #0f0f0f; color: #e0e0e0; }
+/* ============================================
+   TEMA WHATSAPP WEB - GERAL (HOME, CHAT, ADMIN)
+   ============================================ */
+:root {
+    --bg-page: #dbd8d4;
+    --bg-card: #ffffff;
+    --bg-chat: #dbd8d4;
+    --text-primary: #111b21;
+    --text-secondary: #667781;
+    --border-color: #e9edef;
+    --accent: #00a884;
+    --accent-hover: #008f6f;
+}
 
-/* Scrollbar */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); }
-::-webkit-scrollbar-thumb { background: #4facfe; border-radius: 10px; }
+body {
+    font-family: "Segoe UI", Helvetica, Arial, sans-serif !important;
+    background-color: var(--bg-page) !important;
+    color: var(--text-primary) !important;
+}
 
-/* Utilitários */
-.text-center { text-align: center; }
-.mt-10 { margin-top: 10px; }
-.mt-20 { margin-top: 20px; }
+.sidebar, .topbar, .chat-list, .chat-header, .input-area, .stat-card, .hero, .group-card, .meetings-table, .table-container, .admin-container, .admin-header {
+    background-color: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: none !important;
+}
+
+.btn-primary, .send-btn, .btn-ai, .group-btn, .admin-actions button.primary {
+    background-color: var(--accent) !important;
+    color: white !important;
+    border: none !important;
+}
+
+.btn-primary:hover, .send-btn:hover, .group-btn:hover { background-color: var(--accent-hover) !important; }
+
+.chat-area, .messages { background-color: var(--bg-chat) !important; }
+.msg.own { background-color: #d9fdd3 !important; color: var(--text-primary) !important; }
+.msg.other, .msg.ai { background-color: #ffffff !important; color: var(--text-primary) !important; }
+
+h1, h2, h3, th, td, .stat-value, .section-title, .group-name { color: var(--text-primary) !important; }
+p, .label, .stat-label, .subtitle, .time, .group-meta { color: var(--text-secondary) !important; }
+
+#theme-btn, .theme-toggle, .server-status { display: none !important; }
+
+/* Força a cor de fundo do chat */
+.chat-area, .messages {
+    background-color: #dbd8d4 !important;
+}
+
+/* Força a nova cor de fundo geral */
+body {
+    background-color: #dbd8d4 !important;
+}
+
+/* ============================================
+   CORES DO TEMA ESCURO (MODO DARK)
+   ============================================ */
+body.dark-theme {
+    /* Esta é a cor exata do fundo do chat no modo escuro */
+    --bg-page: #111b21 !important;      /* Fundo geral escuro */
+    --bg-card: #202c33 !important;      /* Cards e menus escuros */
+    --bg-chat: #0b141a !important;      /* Fundo do chat escuro */
+    --bg-input: #2a3942 !important;     /* Inputs escuros */
+    --text-primary: #e9edef !important; /* Texto claro */
+    --text-secondary: #8696a0 !important; /* Texto secundário */
+    --border-color: #222d34 !important; /* Bordas escuras */
+}
+
+/* Força o body escuro a usar a cor correta */
+body.dark-theme {
+    background-color: #111b21 !important;
+    color: #e9edef !important;
+}
